@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+
+# paper trading: keep paper_log.csv (the record), ignore the rest
+paper_log_demo.csv
+paper_run_demo.log
+paper_run.log
+*.tmp
