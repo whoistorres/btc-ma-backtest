@@ -1,0 +1,2 @@
+date,close,ma_fast,ma_slow,signal,action,position_after,btc_day_return_pct,cash_rate_pct,strategy_value,buyhold_value,fixedmix_value,trades_total,logged_at_utc
+2026-10-17,81382.148438,81936.406250,74022.324922,1,START: BUY,1,,4.070000,999.000000,999.000000,999.410000,1,2026-10-18 20:45
