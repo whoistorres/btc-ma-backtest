@@ -116,6 +116,34 @@ roughly ±0.5 (standard error ≈ 1/√years).
 
 ---
 
+## Paper trading (live, fake money)
+
+`paper_trade.py` runs the backtest's winning settings (**MA5 / MA100**) forward in time,
+once a day after Bitcoin's daily close (00:00 UTC). No real orders are placed.
+
+Each run processes every completed day since the last run and updates three fake
+$1,000 portfolios, so the live test is judged the same way as the backtest:
+
+| Portfolio | Rule |
+|---|---|
+| MA strategy | Hold BTC when MA5 > MA100, otherwise cash earning the T-bill rate |
+| Buy & hold | 100% BTC, never trades |
+| Fixed 59% BTC | Always 59% BTC / 41% cash (the strategy's average exposure in the backtest test period) |
+
+Results are appended to [`paper_log.csv`](paper_log.csv), one row per day.
+
+```bash
+python paper_trade.py            # real run
+python paper_trade.py --demo     # try it on fake prices (writes a separate demo log)
+```
+
+Design choices:
+- Settings were fixed before paper trading started and are not tuned during it.
+- Today's unfinished daily candle is ignored; only completed days are used.
+- If the computer was off, missed days are caught up, with a warning that those trades
+  assume execution at each day's close.
+- The log is written all-or-nothing, so a crash can't leave a half-written file.
+
 ## How to run it
 
 Requires Python 3.10+ (tested on 3.13).
@@ -141,6 +169,8 @@ assets tested are at the top of `backtest.py`.
 
 ```
 backtest.py        # the full backtest: data, strategy, train/test, benchmarks, report
+paper_trade.py     # daily paper trading of the winning settings (fake money)
+paper_log.csv      # paper trading record, one row per day (created on first run)
 requirements.txt   # Python packages
 README.md          # this file
 LICENSE            # MIT
