@@ -10,3 +10,6 @@ paper_log_demo.csv
 paper_run_demo.log
 paper_run.log
 *.tmp
+
+# robustness.py demo output (fake prices)
+results_demo/
