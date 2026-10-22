@@ -217,6 +217,43 @@ Design choices:
   assume execution at each day's close.
 - The log is written all-or-nothing, so a crash can't leave a half-written file.
 
+### How the paper-trading result will be judged
+
+Written down before the results exist, so it can't be bent to fit them. Paper trading
+started at the 2026-10-17 close.
+
+- **When:** an interim look at **6 months (2027-04-17)** and the real verdict at
+  **12 months (2027-10-17)**. No verdict before 6 months, and no changes to the settings
+  (MA5 / MA100, fee, 59% mix) at any point.
+- **Compared against:** buy & hold **and** the fixed 59% mix, both in `paper_log.csv`.
+  Beating buy & hold alone doesn't count, because the backtest showed a fixed mix with the
+  same exposure can match the signals.
+- **Measured by:** Sharpe ratio above cash (daily `strategy_value`, `buyhold_value` and
+  `fixedmix_value` changes minus the logged `cash_rate_pct`, annualized with 365 days),
+  plus total return and worst drop.
+- **Verdict at 12 months:**
+
+| Result | Verdict |
+|---|---|
+| Strategy Sharpe beats **both** benchmarks by 0.1 or more | Promising, **not proven** |
+| Within 0.1 of either benchmark, or ahead of only one | No evidence of an edge |
+| Behind either benchmark by 0.1 or more | The strategy failed this test |
+
+- **About the 0.1 threshold:** it is a rule of thumb (the same one `backtest.py` uses), not
+  a statistical test. The real test is the bootstrap interval: if the 95% interval for the
+  Sharpe gap includes 0, the gap can't be told apart from luck, whatever the table says.
+  Run the same block bootstrap on the paper-trading daily returns before reading anything
+  into a "promising" result.
+- **The 6-month look** is mainly a sanity check (is the log complete, do the trades match
+  the signals, are costs as expected). It uses the same table, but one half-year is too
+  short to conclude anything.
+- **Why even a pass is only "promising":** the backtest's bootstrap put a 95% interval of
+  roughly ±0.7 on Sharpe gaps over about 3 years. One year of live data is noisier still,
+  and it covers a single market regime, so a good year can't separate skill from luck.
+  A pass means "keep paper trading", not "trade real money".
+- **Not covered:** real slippage, spreads, taxes and missed trades. Paper fills assume
+  execution at each day's close.
+  
 ## How to run it
 
 Requires Python 3.10+ (tested on 3.13).
